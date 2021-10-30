@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/.idea/release_starter_files.iml" filepath="$PROJECT_DIR$/.idea/release_starter_files.iml" />
-=======
-      <module fileurl="file://$PROJECT_DIR$/.idea/HW3.iml" filepath="$PROJECT_DIR$/.idea/HW3.iml" />
->>>>>>> origin
     </modules>
   </component>
 </project>
