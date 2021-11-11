@@ -25,7 +25,10 @@ def load_cifar10():
     #######################################################################
     # TODO: Preprocess images here                                        #
     #######################################################################
-
+    mean_image = np.mean(X_train)
+    std = np.std(X_train)
+    X_train = (X_train - mean_image) / std
+    X_test = (X_test - mean_image) / std
     #######################################################################
     #                         END OF YOUR CODE                            #
     #######################################################################
@@ -112,10 +115,10 @@ def trainNetwork(model, data, **kwargs):
     """
     
     
-    learning_rate =  kwargs.pop('learning_rate', 1e-3)
-    lr_decay = kwargs.pop('lr_decay', 1.0)
-    batch_size = kwargs.pop('batch_size', 100)
-    num_epochs = kwargs.pop('num_epochs', 10)
+    learning_rate =  kwargs.pop('learning_rate', 1.0)
+    lr_decay = kwargs.pop('lr_decay', 0.95)
+    batch_size = kwargs.pop('batch_size', 500)
+    num_epochs = kwargs.pop('num_epochs', 20)
     num_train_samples = kwargs.pop('num_train_samples', 1000)
     num_val_samples = kwargs.pop('num_val_samples', None)
     print_every = kwargs.pop('print_every', 10)   
@@ -195,7 +198,7 @@ def train():
                                         'X_val', 'y_val']}
     
     # initialize model
-    model = SoftmaxClassifier(hidden_dim = 300)
+    model = SoftmaxClassifier(hidden_dim = 64)
       
     # start training    
     
@@ -203,9 +206,9 @@ def train():
     # TODO: Set up model hyperparameters                                  #
     #######################################################################
     model, train_acc_history, val_acc_history = trainNetwork(
-        model, train_data, learning_rate = 5e-3,
-        lr_decay=0.9, num_epochs=20, 
-        batch_size=128, print_every=1000)
+        model, train_data, learning_rate = 0.1,
+        lr_decay=0.95, num_epochs=100,
+        batch_size=500, print_every=1000)
     #######################################################################
     #                         END OF YOUR CODE                            #
     #######################################################################
@@ -218,6 +221,12 @@ def train():
     #######################################################################
     # Save your model with model.save(filepath) once you finish training  #
     #######################################################################
+    model.save('model3')
+    import matplotlib.pyplot as plt
+    plt.plot(train_acc_history, label='train')
+    plt.plot(val_acc_history, label='validation')
+    plt.legend(loc='upper left')
+    plt.savefig('tv3.jpg')
 
 if __name__=="__main__":
     train()

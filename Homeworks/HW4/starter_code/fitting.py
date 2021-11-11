@@ -17,6 +17,8 @@ def lsq(X,Y, learning_rate = 5e-3):
         dx, dS, dt = fc_backward(dloss,cache)
         # You now have the derivative of w in dw and the derivative 
         # of b in dd, update w, b with gradient descent
+        S -= dS * learning_rate
+        t -= dt * learning_rate
         
     return S, t
         
@@ -25,7 +27,7 @@ def main():
     XY = np.load("points_case.npy")
     x, y = XY[:,:2], XY[:,2:]
     # Tune your learning rate here.
-    S, t = lsq(x, y)
+    S, t = lsq(x, y, 2e-4)
     print(S, t)
     y_hat = x.dot(S) + t
     plt.scatter(x[:,0],x[:,1],c="red")
