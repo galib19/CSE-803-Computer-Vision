@@ -112,40 +112,39 @@ def train(model, loader, num_epoch = 10): # Train the model
 
 def evaluate(model, loader): # Evaluate accuracy on validation / test set
     model.eval() # Set the model to evaluation mode
-    correct = 0
-    correct_idx = 0
-    correct_label = 0
+    count_correct= 0
+    index = 0
+    ground_truth= 0
     with torch.no_grad(): # Do not calculate grident to speed up computation
         for batch, label in tqdm(loader):
             batch = batch.to(device)
             label = label.to(device)
             pred = model(batch)
-            correct += (torch.argmax(pred,dim=1)==label).sum().item()
+            count_correct+= (torch.argmax(pred,dim=1)==label).sum().item()
 
-    acc = correct/len(loader.dataset)
-    print("Evaluation accuracy: {}".format(acc))
-    return acc, correct_idx, correct_label
+    accuracy = count_correct= /len(loader.dataset)
+    print("Evaluation accuracy: {}".format(accuracy ))
+    return index, ground_truth
 
 train(model, trainloader)
 
 # TODO: Choose a correctly classified image and visualize it
-_, cidx, clabel = evaluate(model, testloader)
-cidx = 0
+image_index, clabel = evaluate(model, testloader)
+image_index = 0
 for i in range(2, len(testset)):
     pred = model(testset[i][0].unsqueeze(0).to(device))
     if torch.argmax(pred).item() == testset[i][1].item():
-        cidx = i
+        image_index = i
         break
-print(cidx)
-model.transfer() # Copy the weights from fc layer to 1x1 conv layer
-heatmap = model.visualize(testset[cidx][0].unsqueeze(0).to(device)).squeeze(0)
+print(image_index)
+model.transfer()
+heatmap = model.visualize(testset[image_index][0].unsqueeze(0).to(device)).squeeze(0)
 print(heatmap.shape)
-# from google.colab import drive
-# drive.mount('/content/gdrive', force_remount=True)
+
 row1 = torch.cat(tuple([heatmap[i] for i in range(5)]), dim =1)
 row2 = torch.cat(tuple([heatmap[i] for i in range(5,10)]), dim =1)
 a = torch.cat((row1,row2), dim =0).cpu().detach().numpy()
-plt.imshow(testset[cidx][0].squeeze(0))
+plt.imshow(testset[image_index][0].squeeze(0))
 plt.show()
 plt.imshow(a, interpolation='nearest')
 plt.show()
